@@ -40,7 +40,7 @@ class ProjectState extends State {
         return this.instance;
     }
     addProject(title, description, numofPeople) {
-        const newProject = new Project(Math.random.toString(), title, description, numofPeople, ProjectStatus.Active);
+        const newProject = new Project(Math.random().toString(), title, description, numofPeople, ProjectStatus.Active);
         this.projects.push(newProject);
         for (const listenerFn of this.listeners) {
             listenerFn(this.projects.slice());
@@ -115,7 +115,8 @@ class ProjectItem extends Component {
         }
     }
     dragStartHandler(event) {
-        console.log(event);
+        event.dataTransfer.setData('text/plain', this.project.id);
+        event.dataTransfer.effectAllowed = 'move';
     }
     dragEndHandler(_) {
         console.log("DragEnd");
@@ -141,11 +142,17 @@ class ProjectList extends Component {
         this.configure();
         this.renderContent();
     }
-    dragOverHandler(_) {
-        const listEl = this.element.querySelector('ul');
-        listEl === null || listEl === void 0 ? void 0 : listEl.classList.add('droppable');
+    dragOverHandler(event) {
+        if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+            event.preventDefault();
+            const listEl = this.element.querySelector('ul');
+            listEl === null || listEl === void 0 ? void 0 : listEl.classList.add('droppable');
+        }
     }
-    dropHandler(_) {
+    dropHandler(event) {
+        event.preventDefault();
+        console.log('is this running????');
+        console.log(event.dataTransfer.getData('text/plain'));
     }
     dragLeaveHandler(_) {
         const listEl = this.element.querySelector('ul');
@@ -183,6 +190,9 @@ class ProjectList extends Component {
 __decorate([
     autobind
 ], ProjectList.prototype, "dragOverHandler", null);
+__decorate([
+    autobind
+], ProjectList.prototype, "dropHandler", null);
 __decorate([
     autobind
 ], ProjectList.prototype, "dragLeaveHandler", null);
