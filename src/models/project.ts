@@ -1,11 +1,10 @@
-namespace App {
-    // Project Type
-    export enum ProjectStatus {
+// Project Type
+export enum ProjectStatus {
         Active,
         Finished,
-    }
+}
 
-    export class Project {
+export class Project {
         constructor(
             public id: string,
             public title: string,
@@ -13,5 +12,5 @@ namespace App {
             public people: number,
             public status: ProjectStatus
         ) { }
-    }
 }
+
